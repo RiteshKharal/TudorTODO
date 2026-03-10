@@ -35,7 +35,7 @@ export async function acc(formdata: FormData){
       }
     })
 
-    logacc(formdata)
+    await logacc(formdata)
 
     return 'Success'
 }
@@ -65,7 +65,7 @@ export async function acc(formdata: FormData){
     maxAge:60*60*24*9,
     httpOnly:true,
     path:'/',
-    sameSite:'strict',
+    sameSite:'lax',
   })
 
   return 'Success' ;
@@ -74,11 +74,11 @@ export async function acc(formdata: FormData){
 
 export async function getUser(){
   const CookieStore = cookies();
-  const usid = ( await CookieStore).get('UID')?.value;
+  const usid = (await CookieStore).get('UID')?.value;
 
   if (!usid) return null;
 
-  const u = prisma.user.findUnique({
+  const u = await prisma.user.findUnique({
     where:{
       id:usid
     }
