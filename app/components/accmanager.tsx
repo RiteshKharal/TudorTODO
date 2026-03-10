@@ -17,41 +17,83 @@ type UserType = {
   password: string
 }
 
+interface FormErrorTypes{
+  action : String | null
+  msg : String | null
+}
+
 export default function Accmanager({ cardtype }: AccManagerProps) {
   
 
-const [user, setUser] = useState<UserType | null>(null)
+  const [user, setUser] = useState<UserType | null>(null)
   const [lstype, setLstype] = useState<string | null>(null)
   const [out,setOut] = useState<ReactElement | null >(null)
+  const [FormError, setFormError] = useState<FormErrorTypes>({
+    action : null,
+    msg : null
+  })
 
   
-    async function fetchUser() {
+  async function fetchUser() {
           const u = await getUser()
           if (u) setUser(u ?? null)
-        }
+  }
 
   useEffect(() => {
     fetchUser()
   }, [])
+  
+  function ValidateData(formdata : FormData){
+    const ValidatedFormData = {}
+
+    const EmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+    const nameRegex = /^[a-zA-Z\s'-]{2,50}$/
+
+   const email = EmailRegex.test(String(formdata.get('email'))) ? formdata.get('email') : null
+   
+
+   const name = nameRegex.test(String(formdata.get('name'))) ? formdata.get('name') : null
+
+   const pass = formdata.get('password')
+
+   if(!email){
+    setFormError({action:'email',msg:'Invalid Email'})
+   }else if(!name){
+    setFormError({action:'name',msg:'Invalid Name'})
+   }else if(!pass){
+    setFormError({action:'password',msg:'Invalid Password'})
+   }else{
+    return formdata
+   }
+
+   return null
+  }
 
   async function HandleSignSubmit(formdata: FormData) {
-    const result = await acc(formdata);
+    const ValidatedData = ValidateData(formdata)
+    
+    const result = ValidatedData instanceof FormData ? await acc(ValidatedData) : null ;
 
     if (result && result.toLowerCase().includes('success')) {
       setLstype(null);
+      fetchUser()
+      redirect('/')
     }
-    fetchUser()
-    redirect('/')
+    
 
   }
+
   async function HandleLogSubmit(formdata: FormData) {
-    const result = await logacc(formdata);
+    const result =  await logacc(formdata);
+
 
     if (result && result.toLowerCase().includes('success')) {
       setLstype(null);
+      fetchUser()
+      redirect('/')
     }
-    fetchUser()
-    redirect('/')
+    
 
   }
 
@@ -74,21 +116,34 @@ const [user, setUser] = useState<UserType | null>(null)
 
               <form action={HandleLogSubmit}>
                 <div className="flex flex-col gap-5 flex-1">
+                  <div className='transition-transform'>
                     <input
                     type="email"
                     placeholder="Email"
-                    className="w-full p-3 rounded-lg outline-none focus:ring-1 focus:ring-primary/10 border border-border"
+                    className={`w-full p-3 rounded-lg outline-none focus:ring-1  border border-border ${FormError.action ? 'focus:ring-primary/20':'focus:ring-primary/10'} `}
                     name='email'
                     required
                     />
 
-                    <input
-                    type="password"
-                    placeholder="Password"
-                    name='password'
-                    className="w-full p-3 rounded-lg  outline-none focus:ring-1 focus:ring-primary/10 border border-border"
-                    required
-                    />
+                    <span className={`font-medium leading-relaxed text-sm ml-2 mt-1 italic text-start block ${fonts.roboto.className}`}>
+                      {FormError.action == 'email' ? FormError.msg : ''}
+                      </span>
+                  </div>
+                    
+
+                    <div className='transition-transform'>
+                      <input
+                      type="password"
+                      placeholder="Password"
+                      name='password'
+                      className="w-full p-3 rounded-lg  outline-none focus:ring-1 focus:ring-primary/10 border border-border"
+                      required
+                      />
+
+                    <span className={`font-medium leading-relaxed text-sm ml-2 mt-1 italic text-start block ${fonts.roboto.className}`}>
+                      {FormError.action == 'password' ? FormError.msg : ''}
+                      </span>
+                    </div>
                 </div>
 
                 <button className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground transition p-3 rounded-xl font-medium cursor-pointer" type='submit'>
@@ -96,7 +151,7 @@ const [user, setUser] = useState<UserType | null>(null)
                 </button>
                 </form>
 
-                <small className='mt-5 '><button onClick={()=>{setLstype('SignUp')}} className='cursor-pointer'>Already got a account? Click here to login</button></small>
+                <small className='mt-5 '><button onClick={()=>{setLstype('SignUp')}} className='cursor-pointer'>Don't have a accoint? Click here to sign up</button></small>
 
                 </div>
             

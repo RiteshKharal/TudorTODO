@@ -58,7 +58,6 @@ export async function acc(formdata: FormData){
   const PassMatch =await bcrypt.compare(pass,user.password)
   if(!PassMatch) return;
 
-   // set cookie on the current request/response
    const CookieStore = await cookies();
    CookieStore.set('UID', user.id,{
     secure:true,
