@@ -1,16 +1,10 @@
 'use server';
 
 import React from 'react'
-import { PrismaClient } from '../generated/prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
 import { redirect } from 'next/navigation';
 import { getUser } from './SignUp';
+import { prisma } from '../lib/prisma';
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
-
-const prisma = new PrismaClient({adapter});
 
 export default async function TaskManager(formdata : FormData) {
     const user = await getUser();

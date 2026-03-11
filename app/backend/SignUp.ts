@@ -1,22 +1,9 @@
 'use server';
 
-import { PrismaClient } from '../generated/prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt'
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-});
-
-const prisma = new PrismaClient({adapter});
-
-
-type acctypes = {
-  email:string,
-  password: string
-}
+import { prisma } from '@/app/lib/prisma'
 
 
 export async function acc(formdata: FormData){
