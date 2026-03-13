@@ -4,7 +4,7 @@ import * as fonts from '@/app/font/fonts'
 import { MdAccountCircle } from "react-icons/md";
 import { redirect, useRouter } from 'next/navigation';
 import { signIn, signUp, useSession } from '../lib/auth-client';
-import { Loader } from 'lucide-react';
+import { Loader, X } from 'lucide-react';
 
 type AccManagerProps = {
   cardtype: string
@@ -47,11 +47,11 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
     const pass = formdata.get('password')
 
    if(!email && exclude!=='email'){
-    setFormError('Invalid Email')
+    setFormError('Invalid Email.')
    }else if(!name && exclude!=='name'){
-    setFormError('Invalid Name')
+    setFormError('Invalid Name.')
    }else if(!pass && exclude!=='password'){
-    setFormError('Invalid Password')
+    setFormError('Invalid Password.')
    }else{
     return formdata
    }
@@ -65,7 +65,11 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
     const ValidatedData = ValidateData(formdata)
     setLoading(true)
 
-    if(!ValidatedData?.get('name') && !ValidatedData?.get('password') && !ValidatedData?.get('email')) return setFormError('Missing valid Info'); setLoading(false)
+    if(!ValidatedData?.get('name') && !ValidatedData?.get('password') && !ValidatedData?.get('email')){    
+      FormError ?? setFormError('Missing valid Info'); 
+      setLoading(false);
+      return
+    }
 
     const name = ValidatedData.get('name')?.toString() ?? ''
     const email = ValidatedData.get('email')?.toString() ?? ''
@@ -88,12 +92,18 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
   }
 
   async function HandleLogSubmit(event: React.FormEvent<HTMLFormElement>) {
+    setLoading(true)
+    setFormError(null)
     event.preventDefault()
     const formdata = new FormData(event.currentTarget)
     const ValidatedData = ValidateData(formdata, 'name')
-    setLoading(true)
+    
 
-    if(!ValidatedData?.get('password') && !ValidatedData?.get('email')) return setFormError('Missing valid Info'); setLoading(false)
+    if(!ValidatedData?.get('password') && !ValidatedData?.get('email')){
+        setFormError('Missing valid Info');
+        setLoading(false)
+      return
+      }
 
     const email = ValidatedData.get('email')?.toString() ?? ''
     const password = ValidatedData.get('password')?.toString() ?? ''
@@ -116,13 +126,13 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
         function Login({ close }: { close: () => void }) {
             
             return (
-                <div className="relative w-full max-w-md text-primary rounded-2xl p-8 flex flex-col bg-secondary">
+                <div className="relative w-full max-w-md text-primary rounded-2xl p-8 flex flex-col bg-secondary transition-transform">
 
                 <button
                     onClick={close}
                     className="absolute top-4 left-4 text-sm opacity-70 hover:opacity-100 cursor-pointer"
                 >
-                    ✕
+                    <X />
                 </button>
 
                 <h2 className="text-xl font-semibold text-center mb-8">
@@ -147,11 +157,11 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
                       type="password"
                       placeholder="Password"
                       name='password'
-                      className="w-full p-3 rounded-lg  outline-none focus:ring-1 focus:ring-primary/10 border border-border"
+                      className="w-full p-3 rounded-lg outline-none focus:ring-1 focus:ring-primary/10 border border-border"
                       required
                       />
 
-                    <span className={`font-medium leading-relaxed text-sm ml-2 mt-1 italic text-start block ${fonts.workSans.className}`}>
+                    <span className={`font-medium leading-relaxed text-sm ml-2 mt-4 italic text-start block ${fonts.workSans.className} transition-transform animate-[FlowIn_0.4s_ease_forwards]`}>
                       { typeof FormError === 'string'  ? FormError : FormError?.message}
                       </span>
                     </div>
@@ -180,13 +190,13 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
 
         function Signup({ close }: { close: () => void }) {
             return (
-                <div className="relative w-full max-w-md text-primary rounded-2xl p-8 flex flex-col bg-secondary">
+                <div className="relative w-full max-w-md text-primary rounded-2xl p-8 flex flex-col bg-secondary transition-transform">
 
                 <button
                     onClick={close}
                     className="absolute top-4 left-4 text-sm opacity-70 hover:opacity-100 cursor-pointer"
                 >
-                    ✕
+                    <X />
                 </button>
 
                 <h2 className="text-xl font-semibold text-center mb-8">
@@ -203,7 +213,7 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
                   type="text"
                   name="name"
                   placeholder="Username"
-                  className="w-full p-3 rounded-lg text-foreground outline-none focus:ring-2 focus:ring-primary/10 transition-all border-border"
+                  className="w-full p-3 rounded-lg text-foreground outline-none focus:ring-1 focus:ring-primary/10 transition-all border border-border"
                 />
 
                 </div>
@@ -227,9 +237,9 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
                   type="password"
                   name="password"
                   placeholder="Password"
-                  className="w-full p-3 rounded-lg text-foreground outline-none focus:ring-2 focus:ring-primary/10 transition-all"
+                  className="w-full p-3 rounded-lg text-foreground outline-none focus:ring-1 focus:ring-primary/10 transition-all border border-border"
                 />
-                <span className={`font-medium leading-relaxed text-sm ml-2 mt-1 italic text-start block ${fonts.workSans.className} animate-pulse`}>
+                <span className={`font-medium leading-relaxed text-sm ml-2 mt-1 italic text-start block ${fonts.workSans.className} animate-[FlowIn_0.4s_ease_forwards]`}>
                       { typeof FormError === 'string'  ? FormError : FormError?.message}
 
                 </span>
