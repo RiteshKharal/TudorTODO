@@ -1,12 +1,11 @@
-
-import nodemailer from 'nodemailer'
+import nodemailer from "nodemailer"
 
 export const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
+  host: "smtp.resend.com",
   port: 587,
   secure: false,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
+    user: "resend",
+    pass: process.env.RESEND_API_KEY,
+  },
 })

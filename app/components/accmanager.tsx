@@ -4,7 +4,7 @@ import * as fonts from '@/app/font/fonts'
 import { MdAccountCircle } from "react-icons/md";
 import { redirect, useRouter } from 'next/navigation';
 import { signIn, signUp, useSession } from '../lib/auth-client';
-import { Loader, X } from 'lucide-react';
+import { Loader, X, Check } from 'lucide-react';
 
 type AccManagerProps = {
   cardtype: string
@@ -29,6 +29,10 @@ type AuthError = {
   statusText: string
 }
 
+type EmailVerefCardProps = {
+  email: string | null
+}
+
 export default function Accmanager({ cardtype }: AccManagerProps) {
   
 
@@ -38,6 +42,7 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
   const [out,setOut] = useState<ReactElement | null >(null)
   const [FormError, setFormError] = useState<null | AuthError | string>()
   const [loading , setLoading] = useState<boolean>(false)
+  const [EmailVerefOpen, setEmailVerefOpen] = useState<string | null>(null)
 
   function ValidateData(formdata : FormData, exclude : string | null = null){
     const EmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -87,6 +92,7 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
       setLstype(null)
       setFormError(null)
       setLoading(false)
+      setEmailVerefOpen(email)
       router.push('/')
     }
   }
@@ -123,7 +129,7 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
     }
   }
   
-        function Login({ close }: { close: () => void }) {
+  function Login({ close }: { close: () => void }) {
             
             return (
                 <div className="relative w-full max-w-md text-primary rounded-2xl p-8 flex flex-col bg-secondary transition-transform">
@@ -181,14 +187,14 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
                 </button>
                 </form>
 
-                <small className='mt-5 '><button onClick={()=>{setLstype('SignUp'); setFormError(null)}} className='cursor-pointer'>Don't have a account? Click here to sign up</button></small>
+                <small className='mt-5 '><button onClick={()=>{setLstype('signup'); setFormError(null)}} className='cursor-pointer'>Don't have a account? Click here to sign up</button></small>
 
                 </div>
             
             )
-        }
+  }
 
-        function Signup({ close }: { close: () => void }) {
+  function Signup({ close }: { close: () => void }) {
             return (
                 <div className="relative w-full max-w-md text-primary rounded-2xl p-8 flex flex-col bg-secondary transition-transform">
 
@@ -260,69 +266,127 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
                 </button>
 
               </form>
-                <small><button onClick={()=>{setLstype('Login'); setFormError(null)}} className='mt-5 cursor-pointer'>Already got a account? Click here to login</button></small>
+                <small><button onClick={()=>{setLstype('login'); setFormError(null)}} className='mt-5 cursor-pointer'>Already got a account? Click here to login</button></small>
 
                 </div>
             )
-        }
+  }
         
         
-        function options() {
-  user
-    ? setOut(
-        <div
-          className={`
-            flex items-center gap-2
-            rounded-2xl
-            backdrop-blur-md
-            transition-all duration-200
-            cursor-pointer
-            ${fonts.comfortaa.className}
-          `}
-        >
-          <MdAccountCircle className="text-2xl text-primary" />
-          <span className="text-[1rem] font-medium">
-            {user.user.name}
-          </span>
-        </div>
-      )
-    : setOut(
-        <div
-          onClick={() => setLstype("Signup")}
-          className={`
-            rounded-2xl
-            text-primary
-            text-sm font-semibold
-            hover:shadow-lg
-            hover:scale-105
-            transition-all duration-200
-            cursor-pointer
-            ${fonts.cabin.className}
-          `}
-        >
-          Sign Up
-        </div>
+  function options() {
+      user
+        ? setOut(
+            <div
+              className={`
+                flex items-center gap-2
+                rounded-2xl
+                backdrop-blur-md
+                transition-all duration-200
+                cursor-pointer
+                ${fonts.comfortaa.className}
+              `}
+            >
+              <MdAccountCircle className="text-2xl text-primary" />
+              <span className="text-[1rem] font-medium">
+                {user.user.name}
+              </span>
+            </div>
+          )
+        : setOut(
+            <div
+              onClick={() => setLstype("signup")}
+              className={`
+                rounded-2xl
+                text-primary
+                text-sm font-semibold
+                hover:shadow-lg
+                hover:scale-105
+                transition-all duration-200
+                cursor-pointer
+                ${fonts.cabin.className}
+              `}
+            >
+              Sign Up
+            </div>
       );
+  }
+
+  function EmailVerefCard({ email = 'The provided Email'}: EmailVerefCardProps) {
+  if (!EmailVerefOpen) return null;
+
+  return (
+    <div
+      className={`relative w-full max-w-md rounded-2xl p-8 bg-secondary text-primary shadow-xl border border-border/40 flex flex-col gap-6 animate-[fadeIn_0.3s_ease] ${fonts.cabin.className}`}
+    >
+      
+      <button className="absolute top-4 right-4 p-1 rounded-md hover:bg-primary/10 transition cursor-pointer" onClick={()=>{
+        setEmailVerefOpen(null)
+      }}>
+        <X size={18} />
+      </button>
+
+      <div className="flex items-center justify-center">
+        <div className="h-14 w-14 rounded-full bg-green-500/10 flex items-center justify-center">
+          <Check size={26} className="text-green-500" />
+        </div>
+      </div>
+
+      <h2 className={`text-xl font-semibold text-center ${fonts.firaSans.className}`}>
+        Verification Email Sent
+      </h2>
+
+      <div className="text-center flex flex-col gap-2">
+        <span className="text-sm opacity-90">
+          A verification email has been sent to
+        </span>
+
+        <span
+          className={`text-sm font-medium px-2 py-1 mt-4 rounded-md bg-primary/10 inline-block ${fonts.geistMono.className}`}
+        >
+          {email ? email : "The provided email"}
+        </span>
+
+        <span className="text-sm opacity-80 mt-2">
+          Please verify your email within <strong>2 days</strong> to activate your account.
+        </span>
+      </div>
+
+      <a className="mt-2 w-full py-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition font-medium cursor-pointer" href='https://mail.google.com/mail/u/0/#inbox' target='_blank'>
+        Check Email
+      </a>
+
+    </div>
+  );
 }
 
-        useEffect(options,[user])  
+    useEffect(options,[user])  
 
 
   return (
     <>
 
-    
-
       {out}
 
-      {lstype && (
+      {lstype  && (
         <div className="fixed inset-0 z-50 flex justify-center items-center backdrop-blur-sm">
-          {lstype === 'Login'
-            ? <Login close={() => setLstype(null)} />
-            : <Signup close={() => setLstype(null)} />
+
+          {lstype && lstype === 'login' &&
+             <Login close={() => setLstype(null)} />
+          }
+
+          {lstype && lstype === 'signup' && 
+            <Signup close={() => setLstype(null)} />
           }
         </div>
       )}
+
+      {EmailVerefOpen && (
+        <div className="fixed inset-0 z-53 flex justify-center items-center backdrop-blur-sm">
+
+          {EmailVerefOpen ? <EmailVerefCard email ={EmailVerefOpen} /> : ''}
+        </div>
+      )}
+
     </>
   )
 }
