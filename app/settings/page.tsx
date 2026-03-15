@@ -32,12 +32,12 @@ export default function Settings() {
 
       </nav>
 
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center ">
 
-        <div className="w-full backdrop-blur-md rounded-2xl p-8 ">
+        <div className="w-full backdrop-blur-md rounded-2xl p-8">
 
           <button
-            className="flex items-center gap-2 mb-6 hover:-translate-x-1 transition-all ml-40 cursor-pointer"
+            className="flex items-center gap-2 mb-6 hover:-translate-x-1 transition-all ml-40 cursor-pointer "
             onClick={() => router.back()}
           >
             <IoIosArrowRoundBack size={22} />
@@ -45,12 +45,12 @@ export default function Settings() {
           </button>
 
 
-          <h1 className="text-3xl font-bold mb-10 text-center">
+          <h1 className="text-3xl font-bold mb-10 text-center ">
             Settings
           </h1>
 
 
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 ">
 
             <div className="flex items-center justify-evenly p-4 rounded-xl">
 
