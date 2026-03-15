@@ -5,12 +5,11 @@ import Settings from './components/Settings';
 import Accmanager from "./components/accmanager";
 import TaskManager, { UserTasks } from "./backend/TaskManager";
 import { Task } from "./components/TaskCard";
+import { IoSettings } from "react-icons/io5";
 
 export const dynamic = 'force-dynamic'
 
 export default function Home() {
-
-  
 
   return (
     <div className="flex items-center justify-center  font-sans">
@@ -26,7 +25,15 @@ export default function Home() {
 
           <div className="flex flex-row gap-5 text-center justify-center">
             <Accmanager cardtype="signup"/>
-            <Settings/>
+            
+            <div>
+              <a href="/settings">
+              <IoSettings
+                      cursor="pointer"
+                      className=" text-xl"
+                    />
+              </a>
+            </div>
             
             </div>
          </div>

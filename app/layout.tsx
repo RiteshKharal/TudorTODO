@@ -4,7 +4,9 @@ import "./globals.css";
 import { ThemeProviderWrapper } from "./providers/ThemeProvider";
 import { ThemeToggle } from "./components/ThemeToggle";
 import * as fonts  from './font/fonts' 
-
+import Accmanager from "./components/accmanager";
+import { IoSettings } from "react-icons/io5";
+// import  {}
 
 
 export const metadata: Metadata = {
@@ -65,13 +67,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={` antialiased ${fonts.geistMono.className} bg-background/50`}
+        className={`top-10 antialiased ${fonts.geistMono.className} bg-background/50  font-sans`}
       >
 
         <ThemeProviderWrapper>
-          {
-          children
-          }
+          {children}
           </ThemeProviderWrapper>
       </body>
     </html>
