@@ -92,3 +92,32 @@ input[type="date"]::-moz-calendar-picker-indicator {
     opacity: 1;
   }
 }
+
+@keyframes StretchIn{
+  0% {
+    transform: scaleX(1);
+    width : 150%;
+  } 
+  /* 50%{
+    transform: scaleX(0.4);
+    width : 50%
+  } */
+}
+
+
+@keyframes StretchOut{
+  from{
+    transform: scaleX(0);
+    width: 90%
+  }
+}
+
+@keyframes Rotate180{
+  50%{
+    transform: rotate(100deg) scale(1.1);
+
+  }
+  100%{
+    transform: rotate(101deg)
+  }
+}
