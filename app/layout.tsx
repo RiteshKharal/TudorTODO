@@ -3,11 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProviderWrapper } from "./providers/ThemeProvider";
 import { ThemeToggle } from "./components/ThemeToggle";
-import * as fonts  from './font/fonts' 
-import Accmanager from "./components/accmanager";
-import { IoSettings } from "react-icons/io5";
-// import  {}
-
+import * as fonts from "./font/fonts";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tudortodo.vercel.app"),
@@ -57,8 +53,6 @@ export const metadata: Metadata = {
   category: "technology",
 };
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -69,10 +63,7 @@ export default function RootLayout({
       <body
         className={`top-10 antialiased ${fonts.geistMono.className} bg-background/50  font-sans`}
       >
-
-        <ThemeProviderWrapper>
-          {children}
-          </ThemeProviderWrapper>
+        <ThemeProviderWrapper>{children}</ThemeProviderWrapper>
       </body>
     </html>
   );
