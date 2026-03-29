@@ -53,7 +53,7 @@ export async function UserTasks() {
   return tasks;
 }
 
-export async function ToggleTask(TaskID: number, state: boolean) {
+export async function ToggleTaskRead(TaskID: number) {
     const session = await auth.api.getSession({
         headers: await headers()
     });
@@ -73,7 +73,21 @@ export async function ToggleTask(TaskID: number, state: boolean) {
         id:TaskID
     },
     data:{
-        read: state,
+        read: !crnttask.read,
+    }
+  });
+
+}
+
+export async function DeleteTask(TaskID: number) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    if(!session) return null;
+
+  await prisma.task.delete({
+    where:{
+        id:TaskID
     }
   });
 

@@ -1,45 +1,42 @@
-import { betterAuth } from "better-auth"
-import { PrismaClient } from "../generated/prisma/client"
-import { prismaAdapter } from "@better-auth/prisma-adapter"
-import { PrismaPg } from "@prisma/adapter-pg"
-import { dash } from "@better-auth/infra"
-import { sendEmail } from "@better-auth/infra"
-import { transporter } from "./mail"
+import { betterAuth } from "better-auth";
+import { PrismaClient } from "../generated/prisma/client";
+import { prismaAdapter } from "@better-auth/prisma-adapter";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { dash } from "@better-auth/infra";
+import { sendEmail } from "@better-auth/infra";
+import { transporter } from "./mail";
 
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
-})
+	connectionString: process.env.DATABASE_URL!,
+});
 
 export const prisma = new PrismaClient({
-  adapter,
-})
+	adapter,
+});
 
 export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
-    provider: "postgresql",
-  }),
-  plugins:[
-    dash(),
-  ],
+	database: prismaAdapter(prisma, {
+		provider: "postgresql",
+	}),
+	plugins: [dash()],
 
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: true,
-  },
+	emailAndPassword: {
+		enabled: true,
+		requireEmailVerification: true,
+	},
 
-  trustedOrigins: ["http://localhost:3000","https://tudortodo.vercel.app/"],
+	trustedOrigins: ["http://localhost:3000", "https://tudortodo.vercel.app/"],
 
-  emailVerification: {
-    sendOnSignUp: true,
-    autoSignInAfterVerification: true,
-    
+	emailVerification: {
+		sendOnSignUp: true,
+		autoSignInAfterVerification: true,
 
-    async sendVerificationEmail({ user, url }) {
-      const result = await transporter.sendMail({
-  from: '"Tudor" <onboarding@resend.dev>',
-  to: user.email,
-  subject: "Verify Your Tudor Account",
-  html: `
+		async sendVerificationEmail({ user, url }) {
+			const result = await transporter.sendMail({
+				from: '"Tudor" <onboarding@resend.dev>',
+				to: user.email,
+				subject: "Verify Your Tudor Account",
+				html: `
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;padding:40px 0;font-family:Arial,Helvetica,sans-serif;">
   <tr>
     <td align="center">
@@ -98,9 +95,8 @@ export const auth = betterAuth({
     </td>
   </tr>
 </table>
-`
+`,
+			});
+		},
+	},
 });
-
-    },
-  },
-})
