@@ -69,7 +69,7 @@ export function Component({ title, options }: ComponentTypes) {
 					</div>
 
 					{filterOpen && (
-						<div className="absolute top-full left-0 mt-2 w-44 bg-[hsla(0,0%,100%,0.9)] dark:bg-[hsla(240,10%,3%,0.9)] rounded-xl z-99 backdrop-blur-xl border border-border">
+						<div className="absolute top-full left-0 mt-2 w-44 bg-background/90 rounded-xl z-99 backdrop-blur-xl border border-border">
 							<ul className="py-1 text-sm text-[hsla(240,10%,3.9%,1)] dark:text-[hsla(0,0%,98%,1)] text-center p-1">
 								{options.map((opt, i) => (
 									<li
@@ -105,13 +105,13 @@ export function NavigationDropDown({
 		<div className="invisible md:visible">
 			<Component
 				title={
-					<span className="flex flex-row gap-3 text-center place-items-center justify-center self-center p-0 h-0 group-hover:animate-[Rotate180_1s_ease-in-out]">
+					<span className="flex flex-row gap-3 text-center place-items-center justify-center self-center p-0 h-0 group-hover:animate-[Rotate180_1s_ease-in-out] text-foreground">
 						<Ellipsis className="drop-shadow-[0px_0px_10px_hsla(0,0%,0%,0.5)] dark:drop-shadow-[0px_0px_10px_hsla(100,100%,100%,0.5)]" />
 					</span>
 				}
 				options={[
 					{
-						OptionName: <span className="">Toggle Task</span>,
+						OptionName: <span className="text-foreground">Toggle Task</span>,
 						OptionCallBack: () => {
 							OnRead();
 						},
