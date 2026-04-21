@@ -6,6 +6,7 @@ import { prisma } from "../lib/auth";
 // import { useSession } from '../lib/auth-client';
 import { auth } from "../lib/auth";
 import { headers } from "next/headers";
+import { LocalDeleteTask, LocalTaskManager, LocalToggleTaskRead, LocalUserTasks } from "./LocalTaskManager";
 
 export default async function TaskManager(formdata: FormData) {
 	const session = await auth.api.getSession({
@@ -15,7 +16,12 @@ export default async function TaskManager(formdata: FormData) {
 	const TaskDesc = formdata.get("TaskDesc")?.toString() || null;
 	const TaskDate = formdata.get("TaskDueTime")?.toString();
 
-	if (!Task || !TaskDate || !session) return;
+	if (!Task || !TaskDate) return null;
+
+	if (!session) {
+
+		return null;
+	}
 
 	await prisma.task.create({
 		data: {
@@ -33,7 +39,12 @@ export async function UserTasks() {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
-	if (!session) return null;
+
+	if (!session) {
+		LocalUserTasks()
+
+		return null;
+	}
 
 	const tasks = await prisma.task.findMany({
 		where: {
@@ -49,7 +60,11 @@ export async function ToggleTaskRead(TaskID: number) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
-	if (!session) return null;
+	if (!session) {
+		LocalToggleTaskRead(TaskID)
+
+		return null;
+	}
 
 	const crnttask = await prisma.task.findFirst({
 		where: {
@@ -74,7 +89,11 @@ export async function DeleteTask(TaskID: number) {
 	const session = await auth.api.getSession({
 		headers: await headers(),
 	});
-	if (!session) return null;
+	if (!session) {
+		LocalDeleteTask(TaskID)
+
+		return null;
+	}
 
 	await prisma.task.delete({
 		where: {

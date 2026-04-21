@@ -14,11 +14,32 @@ export const metadata: Metadata = {
 	},
 
 	description:
-		"TudorTodo is a customizable minimalist to-do app built with Next.js for focused productivity.",
+		"TudorTodo is a customizable minimalist to-do app built with Next.js for focused productivity and clean task management.",
+
+	keywords: [
+		"TudorTodo",
+		"to-do app",
+		"task manager",
+		"productivity",
+		"minimalist",
+		"customizable",
+		"daily planner",
+		"task tracking",
+		"focus",
+		"time management",
+		"Next.js",
+		"React",
+		"TypeScript",
+		"Tailwind CSS",
+	],
 
 	authors: [{ name: "RK | Red" }],
 	creator: "RK | Red",
 	publisher: "TudorTodo",
+
+	applicationName: "TudorTodo",
+	generator: "Next.js",
+	referrer: "origin-when-cross-origin",
 
 	alternates: {
 		canonical: "/",
@@ -27,6 +48,13 @@ export const metadata: Metadata = {
 	robots: {
 		index: true,
 		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			"max-image-preview": "large",
+			"max-video-preview": -1,
+			"max-snippet": -1,
+		},
 	},
 
 	icons: {
@@ -48,6 +76,7 @@ export const metadata: Metadata = {
 		title: "TudorTodo",
 		description:
 			"A customizable minimalist to-do app designed for focus and productivity.",
+		images: ["/WebIconList.ico"],
 	},
 
 	category: "technology",

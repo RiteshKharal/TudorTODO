@@ -9,16 +9,12 @@ import TaskManager, {
 
 import { useSession } from "@/app/lib/auth-client";
 import { NavigationDropDown } from "./DropDown";
-
-type TaskCardProps = {
-	id: number;
-	title: string;
-	desc: string;
-	date: string;
-	read: boolean;
-	readToggle: () => void;
-	HandleDelete: () => void;
-};
+import {
+	LocalDeleteTask,
+	LocalTaskManager,
+	LocalToggleTaskRead,
+	LocalUserTasks,
+} from "../backend/LocalTaskManager";
 
 export function TaskCard({
 	id,
@@ -28,7 +24,15 @@ export function TaskCard({
 	read,
 	readToggle,
 	HandleDelete,
-}: TaskCardProps) {
+}: {
+	id: number;
+	title: string;
+	desc: string;
+	date: string;
+	read: boolean;
+	readToggle: () => void;
+	HandleDelete: () => void;
+}) {
 	const [checked, setChecked] = useState(read ?? false);
 	const completed = checked;
 	const hasDesc = Boolean(desc);
@@ -102,7 +106,13 @@ export function TaskCard({
 				</div>
 
 				<div className="absolute top-6 left-4 cursor-pointer">
-					<div className="">
+					<div
+						className=""
+						onClick={(e) => {
+							e.preventDefault();
+							e.stopPropagation()
+						}}
+					>
 						<NavigationDropDown
 							TaskId={id}
 							OnRead={() => {
@@ -133,37 +143,47 @@ export function Task() {
 	const [tasks, setTasks] = useState<TasksType[] | null>(null);
 
 	useEffect(() => {
-		if (user) {
-			UpdateTasks();
-		}
-	}, [user]);
+		UpdateTasks();
+	}, []);
 
-	if (!user) {
-		return (
-			<div className="py-8 text-center text-sm text-foreground/70">
-				Please sign in to manage your tasks.
-			</div>
-		);
-	}
+	// if (!user) {
+	// 	return (
+	// 		<div className="py-8 text-center text-sm text-foreground/70">
+	// 			Please sign in to manage your tasks.
+	// 		</div>
+	// 	);
+	// }
 
 	async function UpdateTasks() {
+		if (!user) {
+			const t = LocalUserTasks;
+			if (t) setTasks(t);
+			return;
+		}
+
 		const t = await UserTasks();
 		if (t) setTasks(t ?? null);
 	}
 
-	async function HandleTask(formdata: FormData) {
-		const result = await TaskManager(formdata);
-		if (result && result.toLowerCase().includes("success")) {
-			UpdateTasks();
-		}
-	}
-
 	async function handleReadToggle(taskId: number) {
+		if (!user) {
+			LocalToggleTaskRead(taskId);
+
+			UpdateTasks();
+
+			return;
+		}
+
 		await ToggleTaskRead(taskId);
 		UpdateTasks();
 	}
 
 	async function HandleDelete(TaskId: number) {
+		if (!user) {
+			LocalDeleteTask(TaskId);
+			UpdateTasks();
+			return;
+		}
 		await DeleteTask(TaskId);
 		UpdateTasks();
 	}
@@ -171,7 +191,22 @@ export function Task() {
 	return (
 		<>
 			<section className="w-full mt-[10%]">
-				<form className="flex flex-col gap-5" action={HandleTask}>
+				<form
+					className="flex flex-col gap-5"
+					action={async (formdata: FormData) => {
+						if (!user) {
+							const result = LocalTaskManager(formdata);
+							if (result && result.toLowerCase().includes("success")) {
+								UpdateTasks();
+							}
+						}
+
+						const result = await TaskManager(formdata);
+						if (result && result.toLowerCase().includes("success")) {
+							UpdateTasks();
+						}
+					}}
+				>
 					<input
 						type="text"
 						name="TaskTitle"
