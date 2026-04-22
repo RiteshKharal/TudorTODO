@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
 import { ThemeProviderWrapper } from "./providers/ThemeProvider";
 import { ThemeToggle } from "./components/ThemeToggle";
 import * as fonts from "./font/fonts";
+
+const description =
+	"Customizable minimalist to-do app for focused task management and productivity with Next.js.";
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://tudortodo.vercel.app"),
@@ -13,8 +16,7 @@ export const metadata: Metadata = {
 		template: "%s | TudorTodo",
 	},
 
-	description:
-		"TudorTodo is a customizable minimalist to-do app built with Next.js for focused productivity and clean task management.",
+	description,
 
 	keywords: [
 		"TudorTodo",
@@ -31,6 +33,8 @@ export const metadata: Metadata = {
 		"React",
 		"TypeScript",
 		"Tailwind CSS",
+		"task organizer",
+		"project management",
 	],
 
 	authors: [{ name: "RK | Red" }],
@@ -38,8 +42,15 @@ export const metadata: Metadata = {
 	publisher: "TudorTodo",
 
 	applicationName: "TudorTodo",
+	category: "productivity",
+	classification: "Task Management",
 	generator: "Next.js",
 	referrer: "origin-when-cross-origin",
+	formatDetection: {
+		email: false,
+		address: false,
+		telephone: false,
+	},
 
 	alternates: {
 		canonical: "/",
@@ -48,39 +59,70 @@ export const metadata: Metadata = {
 	robots: {
 		index: true,
 		follow: true,
+		nocache: false,
 		googleBot: {
 			index: true,
 			follow: true,
 			"max-image-preview": "large",
-			"max-video-preview": -1,
 			"max-snippet": -1,
+			"max-video-preview": -1,
 		},
 	},
 
 	icons: {
-		icon: "/WebIconList.ico",
+		icon: "/TudorLogo.ico",
+		shortcut: "/favicon.ico",
+		apple: "/TudorLogo.png",
+		other: [
+			{
+				rel: "icon",
+				url: "/TudorLogo.png",
+			},
+		],
 	},
 
 	openGraph: {
 		title: "TudorTodo",
 		description:
-			"A customizable minimalist to-do app designed for focus and productivity.",
+			"Customizable minimalist task management for focused productivity.",
 		url: "https://tudortodo.vercel.app",
 		siteName: "TudorTodo",
 		type: "website",
-		images: ["/WebIconList.ico"],
+		locale: "en_US",
+		images: [
+			{
+				url: "https://tudortodo.vercel.app/TudorLogo.png",
+				width: 512,
+				height: 512,
+				alt: "TudorTodo Logo",
+			},
+		],
 	},
 
 	twitter: {
 		card: "summary_large_image",
 		title: "TudorTodo",
 		description:
-			"A customizable minimalist to-do app designed for focus and productivity.",
-		images: ["/WebIconList.ico"],
+			"Customizable minimalist task management for focused productivity.",
+		creator: "@RiteshKharal",
+		images: [
+			{
+				url: "https://tudortodo.vercel.app/TudorLogo.png",
+				width: 512,
+				height: 512,
+				alt: "TudorTodo Logo",
+			},
+		],
 	},
-
-	category: "technology",
 };
+
+export const generateViewport = (): Viewport => ({
+	themeColor: [
+		{ media: "(prefers-color-scheme: light)", color: "#ffffff" },
+		{ media: "(prefers-color-scheme: dark)", color: "#000000" },
+	],
+	colorScheme: "light dark",
+});
 
 export default function RootLayout({
 	children,

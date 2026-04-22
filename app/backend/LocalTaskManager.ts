@@ -61,7 +61,12 @@ export function LocalUserTasks() {
 	const LocalTasks = localStorage.getItem("tasks");
 
 	if (LocalTasks) {
-		const current = JSON.parse(LocalTasks);
+		const current: Task[] = JSON.parse(LocalTasks);
+
+		current.sort((a, b) => {
+			if (a.read !== b.read) return Number(a.read) - Number(b.read);
+			return b.id - a.id;
+		});
 		return current;
 	}
 

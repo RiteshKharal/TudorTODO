@@ -146,14 +146,6 @@ export function Task() {
 		UpdateTasks();
 	}, []);
 
-	// if (!user) {
-	// 	return (
-	// 		<div className="py-8 text-center text-sm text-foreground/70">
-	// 			Please sign in to manage your tasks.
-	// 		</div>
-	// 	);
-	// }
-
 	async function UpdateTasks() {
 		if (!user) {
 			const t = LocalUserTasks;
