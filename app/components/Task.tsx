@@ -110,7 +110,7 @@ export function TaskCard({
 						className=""
 						onClick={(e) => {
 							e.preventDefault();
-							e.stopPropagation()
+							e.stopPropagation();
 						}}
 					>
 						<NavigationDropDown
@@ -144,7 +144,7 @@ export function Task() {
 
 	useEffect(() => {
 		UpdateTasks();
-	}, []);
+	}, [user]);
 
 	async function UpdateTasks() {
 		if (!user) {

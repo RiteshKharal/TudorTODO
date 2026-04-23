@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProviderWrapper } from "./providers/ThemeProvider";
 import { ThemeToggle } from "./components/ThemeToggle";
 import * as fonts from "./font/fonts";
+import "@/app/backend/EmailVerefDel";
 
 const description =
 	"Customizable minimalist to-do app for focused task management and productivity with Next.js.";
@@ -132,7 +133,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
-				className={`top-10 antialiased ${fonts.geistMono.className} bg-background/50  font-sans`}
+				className={`top-10 antialiased ${fonts.geistMono.className} bg-background/50  font-sans text-foreground`}
 			>
 				<ThemeProviderWrapper>{children}</ThemeProviderWrapper>
 			</body>

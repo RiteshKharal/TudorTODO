@@ -5,6 +5,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { redirect, useRouter } from "next/navigation";
 import { signIn, signUp, useSession } from "../lib/auth-client";
 import { Loader, X, Check } from "lucide-react";
+import { EmailVerefCard } from "./EmailVerefCard";
 
 type AccManagerProps = {
 	cardtype: string;
@@ -29,10 +30,6 @@ type AuthError = {
 	statusText: string;
 };
 
-type EmailVerefCardProps = {
-	email: string | null;
-};
-
 export default function Accmanager({ cardtype }: AccManagerProps) {
 	const router = useRouter();
 	const { data: user, isPending } = useSession();
@@ -40,7 +37,7 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
 	const [out, setOut] = useState<ReactElement | null>(null);
 	const [FormError, setFormError] = useState<null | AuthError | string>();
 	const [loading, setLoading] = useState<boolean>(false);
-	const [EmailVerefOpen, setEmailVerefOpen] = useState<string | null>(null);
+	const [EmailVeref, setEmailVeref] = useState<string | null>(null);
 
 	function ValidateData(formdata: FormData, exclude: string | null = null) {
 		const EmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -92,14 +89,19 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
 			password: password,
 		});
 
-		if (error) setFormError(error || "Something went wrong!");
-		setLoading(false);
+		if (error) {
+			setFormError(error || "Something went wrong!");
+			setLoading(false);
+			return
+		}
+
+		console.log(data);
 
 		if (data) {
 			setLstype(null);
 			setFormError(null);
 			setLoading(false);
-			setEmailVerefOpen(email);
+			setEmailVeref(email);
 			router.push("/");
 		}
 	}
@@ -321,63 +323,65 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
 				);
 	}
 
-	function EmailVerefCard({
-		email = "The provided Email",
-	}: EmailVerefCardProps) {
-		if (!EmailVerefOpen) return null;
+	// function EmailVerefCard({
+	// 	email = "The provided Email",
+	// }: {
+	// 	email?: string;
+	// }) {
+	// 	if (!EmailVeref) return null;
 
-		return (
-			<div
-				className={`relative w-full max-w-md rounded-2xl p-8 bg-secondary text-primary shadow-xl border border-border/40 flex flex-col gap-6 animate-[fadeIn_0.3s_ease] ${fonts.cabin.className}`}
-			>
-				<button
-					className="absolute top-4 right-4 p-1 rounded-md hover:bg-primary/10 transition cursor-pointer"
-					onClick={() => {
-						setEmailVerefOpen(null);
-					}}
-				>
-					<X size={18} />
-				</button>
+	// 	return (
+	// 		<div
+	// 			className={`relative w-full max-w-md rounded-2xl p-8 bg-secondary text-primary shadow-xl border border-border/40 flex flex-col gap-6 animate-[fadeIn_0.3s_ease] ${fonts.cabin.className}`}
+	// 		>
+	// 			<button
+	// 				className="absolute top-4 right-4 p-1 rounded-md hover:bg-primary/10 transition cursor-pointer"
+	// 				onClick={() => {
+	// 					setEmailVeref(null);
+	// 				}}
+	// 			>
+	// 				<X size={18} />
+	// 			</button>
 
-				<div className="flex items-center justify-center">
-					<div className="h-14 w-14 rounded-full bg-green-500/10 flex items-center justify-center">
-						<Check size={26} className="text-green-500" />
-					</div>
-				</div>
+	// 			<div className="flex items-center justify-center">
+	// 				<div className="h-14 w-14 rounded-full bg-green-500/10 flex items-center justify-center">
+	// 					<Check size={26} className="text-green-500" />
+	// 				</div>
+	// 			</div>
 
-				<h2
-					className={`text-xl font-semibold text-center ${fonts.firaSans.className}`}
-				>
-					Verification Email Sent
-				</h2>
+	// 			<h2
+	// 				className={`text-xl font-semibold text-center ${fonts.firaSans.className}`}
+	// 			>
+	// 				Verification Email Sent
+	// 			</h2>
 
-				<div className="text-center flex flex-col gap-2">
-					<span className="text-sm opacity-90">
-						A verification email has been sent to
-					</span>
+	// 			<div className="text-center flex flex-col gap-2">
+	// 				<span className="text-sm opacity-90">
+	// 					A verification email has been sent to
+	// 				</span>
 
-					<span
-						className={`text-sm font-medium px-2 py-1 mt-4 rounded-md bg-primary/10 inline-block ${fonts.geistMono.className}`}
-					>
-						{email ? email : "The provided email"}
-					</span>
+	// 				<span
+	// 					className={`text-sm font-medium px-2 py-1 mt-4 rounded-md bg-primary/10 inline-block ${fonts.geistMono.className}`}
+	// 				>
+	// 					{email ? email : "The provided email"}
+	// 				</span>
 
-					<span className="text-sm opacity-80 mt-2">
-						Please verify your email within <strong>2 days</strong> to activate
-						your account.
-					</span>
-				</div>
+	// 				<span className="text-sm opacity-80 mt-2">
+	// 					Please verify your email within <strong>2 days</strong> to activate
+	// 					your account.
+	// 				</span>
+	// 			</div>
 
-				<a
-					className="mt-2 w-full py-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition font-medium cursor-pointer"
-					href="https://mail.google.com/mail/u/0/#inbox"
-					target="_blank"
-				>
-					Check Email
-				</a>
-			</div>
-		);
-	}
+	// 			<a
+	// 				className="mt-2 w-full py-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition font-medium cursor-pointer"
+	// 				href="https://mail.google.com/mail/u/0/#inbox"
+	// 				target="_blank"
+	// 			>
+	// 				Check Email
+	// 			</a>
+	// 		</div>
+	// 	);
+	// }
 
 	useEffect(options, [user]);
 
@@ -397,9 +401,14 @@ export default function Accmanager({ cardtype }: AccManagerProps) {
 				</div>
 			)}
 
-			{EmailVerefOpen && (
+			{EmailVeref && (
 				<div className="fixed inset-0 z-53 flex justify-center items-center backdrop-blur-sm">
-					{EmailVerefOpen ? <EmailVerefCard email={EmailVerefOpen} /> : ""}
+					<EmailVerefCard
+						email={EmailVeref}
+						onClose={() => {
+							setEmailVeref(null);
+						}}
+					/>
 				</div>
 			)}
 		</>
