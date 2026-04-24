@@ -6,7 +6,12 @@ import { prisma } from "../lib/auth";
 // import { useSession } from '../lib/auth-client';
 import { auth } from "../lib/auth";
 import { headers } from "next/headers";
-import { LocalDeleteTask, LocalTaskManager, LocalToggleTaskRead, LocalUserTasks } from "./LocalTaskManager";
+import {
+	LocalDeleteTask,
+	LocalTaskManager,
+	LocalToggleTaskRead,
+	LocalUserTasks,
+} from "./LocalTaskManager";
 
 export default async function TaskManager(formdata: FormData) {
 	const session = await auth.api.getSession({
@@ -19,7 +24,6 @@ export default async function TaskManager(formdata: FormData) {
 	if (!Task || !TaskDate) return null;
 
 	if (!session) {
-
 		return null;
 	}
 
@@ -32,7 +36,7 @@ export default async function TaskManager(formdata: FormData) {
 		},
 	});
 
-	return "Success";
+	return "success";
 }
 
 export async function UserTasks() {
@@ -41,7 +45,7 @@ export async function UserTasks() {
 	});
 
 	if (!session) {
-		LocalUserTasks()
+		LocalUserTasks();
 
 		return null;
 	}
@@ -61,7 +65,7 @@ export async function ToggleTaskRead(TaskID: number) {
 		headers: await headers(),
 	});
 	if (!session) {
-		LocalToggleTaskRead(TaskID)
+		LocalToggleTaskRead(TaskID);
 
 		return null;
 	}
@@ -90,7 +94,7 @@ export async function DeleteTask(TaskID: number) {
 		headers: await headers(),
 	});
 	if (!session) {
-		LocalDeleteTask(TaskID)
+		LocalDeleteTask(TaskID);
 
 		return null;
 	}

@@ -144,6 +144,45 @@ export function Task() {
 
 	useEffect(() => {
 		UpdateTasks();
+
+		if (!user) return;
+
+		const run = async () => {
+			UpdateTasks();
+
+			const stored = localStorage.getItem("tasks");
+			if (!stored) return;
+
+			const LocalTasks = JSON.parse(stored);
+
+			for (let i = 0; i < LocalTasks.length; i++) {
+				const val = LocalTasks[i];
+				if (!val.draft) continue;
+
+				const formData = new FormData();
+
+				Object.entries({
+					TaskTitle: val.title,
+					TaskDesc: val.description ?? "",
+					TaskDueTime: val.date,
+				}).forEach(([k, v]) => formData.append(k, String(v)));
+
+				console.log('form',Object.fromEntries(formData))
+
+				const result = await TaskManager(formData);
+				console.log('res',result)
+
+				if (result?.toLowerCase() === "success") {
+					LocalTasks[i].draft = false;
+				}
+			}
+
+			localStorage.setItem("tasks", JSON.stringify(LocalTasks));
+
+			UpdateTasks();
+		};
+
+		run();
 	}, [user]);
 
 	async function UpdateTasks() {

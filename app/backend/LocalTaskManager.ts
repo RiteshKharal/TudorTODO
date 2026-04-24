@@ -6,6 +6,7 @@ interface Task {
 	description: string | null;
 	date: string;
 	read: boolean;
+	draft: boolean;
 }
 
 export function LocalTaskManager(formdata: FormData) {
@@ -26,6 +27,7 @@ export function LocalTaskManager(formdata: FormData) {
 				description: TaskDesc,
 				date: TaskDate,
 				read: false,
+				draft: true,
 			});
 
 			localStorage.setItem("tasks", JSON.stringify(current));
@@ -45,6 +47,7 @@ export function LocalTaskManager(formdata: FormData) {
 						description: TaskDesc,
 						date: TaskDate,
 						read: false,
+						draft: true,
 					},
 				]),
 			);
